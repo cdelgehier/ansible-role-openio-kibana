@@ -1,7 +1,12 @@
-# roles/ROLENAME/vars/Debian.yml
+# roles/kibana/vars/Debian.yml
 # Distribution-specific variables for Ubuntu, Debian, ...
 ---
-ROLENAME_packages:
-  - openio-ROLENAME
+kibana_packages: []
+  #- "{{ 'kibana-oss' if openio_kibana_version == 'latest' else 'kibana-oss=' ~ openio_kibana_version }}"
 syslog_user: syslog
+
+openio_kibana_repo_baseurl:
+  "deb https://artifacts.elastic.co/packages/{{ openio_kibana_repo }}/apt stable main"
+
+openio_kibana_repo_filename: "elasticsearch-{{ openio_kibana_repo }}"
 ...

@@ -2,12 +2,12 @@
 > **Remove this part after a clone**
 
 ```sh
-git clone git@github.com:open-io/ansible-role-openio-skeleton.git ROLENAME
-cd ROLENAME
+git clone git@github.com:open-io/ansible-role-openio-skeleton.git kibana
+cd kibana
 grep -r -E '\b[A-Z]+\b' --exclude=LICENSE *
-find $PWD -type f -print0 | xargs -0 sed -i -e 's@ROLENAME@trueName@g'
+find $PWD -type f -print0 | xargs -0 sed -i -e 's@kibana@trueName@g'
 git remote -v
-git remote set-url origin git@github.com:open-io/ansible-role-openio-ROLENAME.git
+git remote set-url origin git@github.com:open-io/ansible-role-openio-kibana.git
 
 vi meta/main.yml # change purpose and tags
 vi README.md
@@ -59,8 +59,8 @@ for i in $(grep -E "^openio_" defaults/main.yml |cut -d':' -f1| sort); do echo '
 -----REMOVE--THE---8<-----PREVIOUS---PART------
 __
 
-[![Build Status](https://travis-ci.org/open-io/ansible-role-openio-ROLENAME.svg?branch=master)](https://travis-ci.org/open-io/ansible-role-openio-ROLENAME)
-# Ansible role `ROLENAME`
+[![Build Status](https://travis-ci.org/open-io/ansible-role-openio-kibana.svg?branch=master)](https://travis-ci.org/open-io/ansible-role-openio-kibana)
+# Ansible role `kibana`
 
 An Ansible role for PURPOSE. Specifically, the responsibilities of this role are to:
 
@@ -75,7 +75,7 @@ An Ansible role for PURPOSE. Specifically, the responsibilities of this role are
 
 | Variable   | Default | Comments (type)  |
 | :---       | :---    | :---             |
-| `openio_ROLENAME_...` | `...`   | ...              |
+| `openio_kibana_...` | `...`   | ...              |
 
 ## Dependencies
 
@@ -88,7 +88,7 @@ No dependencies.
   gather_facts: true
   become: true
   roles:
-    - role: ROLENAME
+    - role: kibana
 ```
 
 

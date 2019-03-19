@@ -1,8 +1,8 @@
-# roles/ROLENAME/handlers/main.yml
+# roles/kibana/handlers/main.yml
 ---
-#- name: restart ROLENAME
+#- name: restart kibana
 #  service:
-#    name: "{{ ROLENAME_service }}"
+#    name: "{{ kibana_service }}"
 #    state: restarted
 #
 ...

@@ -1,0 +1,28 @@
+# {{ ansible_managed }}
+---
+server.port: {{ openio_kibana_bind_port }}
+server.host: {{ openio_kibana_bind_address }}
+
+elasticsearch.url: {{ openio_kibana_elasticsearch_url }}
+elasticsearch.ssl.verificationMode: none
+elasticsearch.username: {{ openio_kibana_elasticsearch_user }}
+elasticsearch.password: {{ openio_kibana_elasticsearch_password }}
+elasticsearch.requestHeadersWhitelist:
+  - Authorization
+  - sgtenant
+
+logging.dest: {{ openio_kibana_log_dir }}/kibana.log
+kibana.index: .kibana
+
+searchguard.basicauth.login.brandimage: http://www.openio.io/wp-content/uploads/2017/02/OIO_LOGO_rgb_red.png
+searchguard.basicauth.login.title: "title"
+searchguard.basicauth.login.subtitle: "sub-title"
+searchguard.multitenancy.enable_filter: false
+searchguard.multitenancy.tenants.enable_global: false
+searchguard.readonly_mode.roles:
+  - sg_customer_access
+
+{% if openio_kibana_additional_config %}
+{{ openio_kibana_additional_config | to_nice_yaml }}
+{% endif %}
+...

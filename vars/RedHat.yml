@@ -1,7 +1,10 @@
-# roles/ROLENAME/vars/RedHat.yml
+# roles/kibana/vars/RedHat.yml
 # Distribution-specific variables for RHEL, CentOS, ...
 ---
-ROLENAME_packages:
-  - openio-ROLENAME
+kibana_packages: []
+  #- "{{ 'kibana-oss' if openio_kibana_version == 'latest' else 'kibana-oss-' ~ openio_kibana_version }}"
 syslog_user: openio
+
+openio_kibana_repo_filename: "elasticsearch-{{ openio_kibana_repo }}"
+openio_kibana_repo_baseurl: "https://artifacts.elastic.co/packages/{{ openio_kibana_repo }}/yum"
 ...

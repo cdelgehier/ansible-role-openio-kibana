@@ -1,4 +1,4 @@
-# roles/ROLENAME/tasks/main.yml
+# roles/kibana/tasks/main.yml
 ---
 - name: "Include {{ ansible_distribution }} variables"
   include_vars: "{{ item }}"
@@ -33,9 +33,9 @@
     path: "{{ item }}"
   register: _dir
   with_items:
-    - "/etc/gridinit.d/{{ openio_ROLENAME_namespace }}"
-    - "{{ openio_ROLENAME_sysconfig_dir }}/ROLENAME-{{ openio_ROLENAME_serviceid }}"
-    #- "{{ openio_ROLENAME_volume }}"
+    - "/etc/gridinit.d/{{ openio_kibana_namespace }}"
+    - "{{ openio_kibana_sysconfig_dir }}/kibana-{{ openio_kibana_serviceid }}"
+    - "{{ openio_kibana_volume }}/optimize"
 
 - name: Ensure directories exists
   file:
@@ -51,7 +51,7 @@
 
 - name: Ensure log directory
   file:
-    path: "/var/log/oio/sds/{{ openio_ROLENAME_namespace }}/ROLENAME-{{ openio_ROLENAME_serviceid }}"
+    path: "/var/log/oio/sds/{{ openio_kibana_namespace }}/kibana-{{ openio_kibana_serviceid }}"
     state: directory
     owner: "{{ syslog_user }}"
     group: openio
@@ -67,20 +67,31 @@
     group: openio
     mode: 0644
   with_items:
-    - src: "ROLENAME.conf.j2"
-      dest: "{{ openio_ROLENAME_sysconfig_dir }}/\
-        ROLENAME-{{ openio_ROLENAME_serviceid }}/ROLENAME-{{ openio_ROLENAME_serviceid }}.conf"
-    - src: "gridinit_ROLENAME.conf.j2"
-      dest: "{{ openio_ROLENAME_gridinit_dir }}/{{ openio_ROLENAME_gridinit_file_prefix }}\
-        ROLENAME-{{ openio_ROLENAME_serviceid }}.conf"
-  register: _ROLENAME_conf
+    - src: "kibana.yml.j2"
+      dest: "{{ openio_kibana_sysconfig_dir }}/\
+        kibana-{{ openio_kibana_serviceid }}/kibana.yml"
+    - src: "gridinit_kibana.conf.j2"
+      dest: "{{ openio_kibana_gridinit_dir }}/{{ openio_kibana_gridinit_file_prefix }}\
+        kibana-{{ openio_kibana_serviceid }}.conf"
+  register: _kibana_conf
 
-- name: restart ROLENAME
+- name: Install kibana safeguard plugin
+  command: "./bin/kibana-plugin install {{ openio_kibana_safeguard_version }}"
+  register: _sg_installed
+  args:
+    chdir: "/usr/share/kibana"
+  when:
+    - openio_kibana_safeguard_version != ""
+  failed_when:
+    - _sg_installed.rc != 0
+    - not 'already exists' in _sg_installed.stderr
+
+- name: restart kibana
   shell: |
     gridinit_cmd reload
-    gridinit_cmd restart  {{openio_ROLENAME_namespace}}-ROLENAME-{{openio_ROLENAME_serviceid}}
-  when: 
-    - _ROLENAME_conf.changed
-    - not openio_ROLENAME_provision_only
+    gridinit_cmd restart  {{openio_kibana_namespace}}-kibana-{{openio_kibana_serviceid}}
+  when:
+    - _kibana_conf.changed
+    - not openio_kibana_provision_only
   tags: configure
 ...
